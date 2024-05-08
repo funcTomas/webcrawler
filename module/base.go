@@ -27,7 +27,7 @@ type Module interface {
 	CalledCount() uint64
 	AcceptedCount() uint64
 	CompletedCount() uint64
-	HandlingCount() uint64
+	HandlingNumber() uint64
 	Counts() Counts
 	Summary() SummaryStruct
 }
