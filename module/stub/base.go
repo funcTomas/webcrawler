@@ -4,7 +4,7 @@ import "webcrawler/module"
 
 type ModuleInternal interface {
 	module.Module
-	IncreCalledCount()
+	IncrCalledCount()
 	IncrAcceptedCount()
 	IncrCompletedCount()
 	IncrHandlingNumber()

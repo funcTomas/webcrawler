@@ -102,7 +102,7 @@ func (m *myModule) IncrHandlingNumber() {
 	atomic.AddUint64(&m.handlingNumber, 1)
 }
 
-func (m *myModule) IncreCalledCount() {
+func (m *myModule) IncrCalledCount() {
 	atomic.AddUint64(&m.calledCount, 1)
 }
 
