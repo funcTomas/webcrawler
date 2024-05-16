@@ -57,4 +57,63 @@ func TestRequest(t *testing.T) {
 }
 
 func TestResponse(t *testing.T) {
+	method := "GET"
+	expectedURLStr := "https://github.com/gopcp"
+	httpReq, _ := http.NewRequest(method, expectedURLStr, nil)
+	expectedHTTPResp := &http.Response{
+		Request: httpReq,
+		Body: testingReader{
+			strings.NewReader("Test Response"),
+		},
+	}
+	expectedDepth := uint32(0)
+	resp := NewResponse(expectedHTTPResp, uint32(expectedDepth))
+	if resp == nil {
+		t.Fatal("Could not create response")
+	}
+	if _, ok := interface{}(resp).(Data); !ok {
+		t.Fatalf("Response did not implement Data!")
+	}
+	expectedValidity := true
+	valid := resp.Valid()
+	if valid != expectedValidity {
+		t.Fatalf("Inconsistent validity for response, expected: %v, acutal: %v", expectedValidity, valid)
+	}
+	if resp.HTTPResp() != expectedHTTPResp {
+		t.Fatalf("Inconsistent HTTP response for response, expected: %#v, actual: %#v", expectedHTTPResp, resp.HTTPResp())
+	}
+	if resp.Depth() != expectedDepth {
+		t.Fatalf("Inconsistent depth for response, expected: %d, acutal: %d", expectedDepth, resp.Depth())
+	}
+	expectedHTTPResp.Body = nil
+	resp = NewResponse(expectedHTTPResp, expectedDepth)
+	expectedValidity = false
+	valid = resp.Valid()
+	if valid != expectedValidity {
+		t.Fatalf("Inconsistent valid for response, expected: %v, actual: %v", expectedValidity, valid)
+	}
+	resp = NewResponse(nil, expectedDepth)
+	expectedValidity = false
+	valid = resp.Valid()
+	if valid != expectedValidity {
+		t.Fatalf("Inconsistent valid for response, expected: %v, actual: %v", expectedValidity, valid)
+	}
+}
+
+func TestItem(t *testing.T) {
+	item := Item(map[string]interface{}{})
+	if _, ok := interface{}(item).(Data); !ok {
+		t.Fatal("Item did not implement Data!")
+	}
+	expectedValidity := true
+	valid := item.Valid()
+	if valid != expectedValidity {
+		t.Fatalf("Inconsistent validity for item, expected: %v, actual: %v", expectedValidity, valid)
+	}
+	item = Item(nil)
+	expectedValidity = false
+	valid = item.Valid()
+	if valid != expectedValidity {
+		t.Fatalf("Inconsistent validity for item, expected: %v, acutal: %v", expectedValidity, valid)
+	}
 }

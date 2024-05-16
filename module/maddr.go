@@ -20,7 +20,7 @@ func (ma *mAddr) String() string {
 	return ma.address
 }
 
-func NewAddr(network string, ip string, port int64) (net.Addr, error) {
+func NewAddr(network string, ip string, port uint64) (net.Addr, error) {
 	if network != "http" && network != "https" {
 		errMsg := fmt.Sprintf("illegal network for module address: %s", network)
 		return nil, errors.NewIllegalParameterError(errMsg)
