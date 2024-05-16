@@ -10,7 +10,7 @@ var addrStr = "127.0.0.1:8080"
 var mid = module.MID("D1|" + addrStr)
 
 func TestNew(t *testing.T) {
-	mi, err := NewModuleInternal(mid, module.CalculateSocreSimple)
+	mi, err := NewModuleInternal(mid, module.CalculateScoreSimple)
 	if err != nil {
 		t.Fatalf("An error occurs when creating an internal module: %s (mid: %s)", err, mid)
 	}
@@ -28,7 +28,7 @@ func TestNew(t *testing.T) {
 	}
 	if mi.ScoreCalculator() == nil {
 		t.Fatalf("Inconsistent score calculator for internal module, expected: %p (%T), actual: %p (%T)",
-			module.CalculateSocreSimple, module.CalculateSocreSimple, mi.ScoreCalculator(), mi.ScoreCalculator())
+			module.CalculateScoreSimple, module.CalculateScoreSimple, mi.ScoreCalculator(), mi.ScoreCalculator())
 	}
 	if mi.CalledCount() != 0 {
 		t.Fatalf("Inconsistent called count for internal module, expected: %d, actual: %d", 0, mi.CalledCount())
