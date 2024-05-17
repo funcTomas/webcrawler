@@ -94,6 +94,29 @@ func TestTypeGetLetter(t *testing.T) {
 	}
 }
 
+func TestTypeToLetter(t *testing.T) {
+	for _, mt := range legalTypes {
+		ok, letter := typeToLetter(mt)
+		if !ok {
+			t.Fatalf("Could not convert module type %q to letter", mt)
+		}
+		expectedLetter := strings.ToUpper(string(mt)[:1])
+		if letter != expectedLetter {
+			t.Fatalf("Inconsistent letter for module type, expected: %s, actual: %s (moduleType: %s)",
+				expectedLetter, letter, mt)
+		}
+	}
+	illegalTypes := []Type{
+		Type("OTHER_MODULE_TYPE"),
+	}
+	for _, mt := range illegalTypes {
+		ok, letter := typeToLetter(mt)
+		if ok {
+			t.Fatalf("It still convert illegal module type %q to letter %q", mt, letter)
+		}
+	}
+}
+
 func TestTypeLetterToType(t *testing.T) {
 	letters := []string{"D", "A", "P", "M"}
 	for _, letter := range letters {

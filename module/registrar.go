@@ -15,7 +15,7 @@ type Registrar interface {
 	Clear()
 }
 
-func NewRegisrar() Registrar {
+func NewRegistrar() Registrar {
 	return &myRegistrar{
 		moduleTypeMap: map[Type]map[MID]Module{},
 	}

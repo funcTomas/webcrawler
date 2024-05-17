@@ -21,4 +21,19 @@ func TestCalculateScoreSimple(t *testing.T) {
 }
 
 func TestSetScore(t *testing.T) {
+	fakeModule := NewFakeDownloader(MID("D0"), nil)
+	ok := SetScore(fakeModule)
+	if !ok {
+		t.Fatalf("Could not set score for module with default calculator")
+	}
+	fakeModule = NewFakeDownloader(MID("D0"), CalculateScoreSimple)
+	fakeModule.(*fakeDownloader).fakeModule.count++
+	ok = SetScore(fakeModule)
+	if !ok {
+		t.Fatal("Could not set for module")
+	}
+	ok = SetScore(fakeModule)
+	if ok {
+		t.Fatal("It still can set same score for module")
+	}
 }
