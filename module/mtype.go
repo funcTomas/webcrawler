@@ -88,7 +88,7 @@ func letterToType(letter string) (bool, Type) {
 	case "A":
 		return true, TYPE_ANALYZER
 	case "P":
-		return true, TYPE_DOWNLOADER
+		return true, TYPE_PIPELINE
 	default:
 		return false, ""
 	}

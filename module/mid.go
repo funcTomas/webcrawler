@@ -80,6 +80,10 @@ func SplitMID(mid MID) ([]string, error) {
 				fmt.Sprintf("illegal module ip %s: ", ipStr))
 
 		}
+		portStr := addr[index+1:]
+		if _, err := strconv.ParseUint(portStr, 10, 64); err != nil {
+			return nil, errors.NewIllegalParameterError(fmt.Sprintf("illegal module port: %s", portStr))
+		}
 	}
 	return []string{letter, snStr, addr}, nil
 

@@ -38,6 +38,7 @@ type Downloader interface {
 }
 
 type Analyzer interface {
+	Module
 	RespParsers() []ParseResponse
 	Analyze(resp *Response) ([]Data, []error)
 }
