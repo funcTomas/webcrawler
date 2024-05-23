@@ -40,8 +40,8 @@ type SummaryStruct struct {
 	Downloaders     []module.SummaryStruct  `json:"downloaders"`
 	Analyzers       []module.SummaryStruct  `json:"analyzers"`
 	Pipelines       []module.SummaryStruct  `json:"pipelines"`
-	ReqBufferPool   BufferPoolSummaryStruct `json:"req_buffer_pool"`
-	RespBufferPool  BufferPoolSummaryStruct `json:"resp_buffer_pool"`
+	ReqBufferPool   BufferPoolSummaryStruct `json:"request_buffer_pool"`
+	RespBufferPool  BufferPoolSummaryStruct `json:"response_buffer_pool"`
 	ItemBufferPool  BufferPoolSummaryStruct `json:"item_buffer_pool"`
 	ErrorBufferPool BufferPoolSummaryStruct `json:"error_buffer_pool"`
 	NumURL          uint64                  `json:"url_number"`
@@ -80,7 +80,7 @@ func (one *SummaryStruct) Same(another SummaryStruct) bool {
 		return false
 	}
 	for i, ps := range another.Pipelines {
-		if ps != another.Pipelines[i] {
+		if ps != one.Pipelines[i] {
 			return false
 		}
 	}
@@ -116,7 +116,7 @@ func (ss *mySchedSummary) Struct() SummaryStruct {
 		RespBufferPool:  getBufferPoolSummary(ss.sched.respBufferPool),
 		ItemBufferPool:  getBufferPoolSummary(ss.sched.itemBufferPool),
 		ErrorBufferPool: getBufferPoolSummary(ss.sched.errorBufferPool),
-		NumURL:          ss.sched.urlMap.Len(),
+		NumURL:          0,
 	}
 }
 

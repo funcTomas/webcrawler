@@ -14,6 +14,10 @@ func genErrorByError(err error) error {
 	return errors.NewCrawlerError(errors.ERROR_TYPE_SCHEDULER, err.Error())
 }
 
+func genParameterError(errMsg string) error {
+	return errors.NewCrawlerErrorBy(errors.ERROR_TYPE_SCHEDULER, errors.NewIllegalParameterError(errMsg))
+}
+
 func sendError(err error, mid module.MID, errBufferPool buffer.Pool) bool {
 	if err == nil || errBufferPool == nil || errBufferPool.Closed() {
 		return false

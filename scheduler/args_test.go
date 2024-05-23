@@ -92,6 +92,13 @@ func TestArgsData(t *testing.T) {
 	}
 }
 
+func genRequestArgs(acceptedDomains []string, maxDepth uint32) RequestArgs {
+	return RequestArgs{
+		AcceptedDomains: acceptedDomains,
+		MaxDepth:        maxDepth,
+	}
+}
+
 func genDataArgs(bufferCap uint32, maxBufferNumber uint32, stepLen uint32) DataArgs {
 	values := [8]uint32{}
 	var bufferCapStep uint32
