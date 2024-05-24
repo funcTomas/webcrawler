@@ -444,7 +444,7 @@ func (sched *myScheduler) sendReq(req *module.Request) bool {
 			logger.Warnln("The request buffer pool was closed. Ignore the request sending")
 		}
 	}(req)
-	sched.urlMap.Store(reqURL.Host, struct{}{})
+	sched.urlMap.Store(reqURL.String(), struct{}{})
 	return true
 }
 

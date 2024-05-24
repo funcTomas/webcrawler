@@ -156,7 +156,7 @@ func genSimpleModuleArgs(downloaderNumber int8, analyzerNumber int8, pipelineNum
 	return ModuleArgs{
 		Downloaders: genSimpleDownloaders(downloaderNumber, false, snGen, t),
 		Analyzers:   genSimpleAnalyzers(analyzerNumber, false, snGen, t),
-		Pipelines:   getSimplePipelines(pipelineNumber, false, snGen, t),
+		Pipelines:   genSimplePipelines(pipelineNumber, false, snGen, t),
 	}
 }
 
@@ -280,7 +280,7 @@ func parseATag(httpResp *http.Response, respDepth uint32) ([]module.Data, []erro
 	return dataList, errs
 }
 
-func getSimplePipelines(number int8, reuseMID bool, snGen module.SNGenerator, t *testing.T) []module.Pipleline {
+func genSimplePipelines(number int8, reuseMID bool, snGen module.SNGenerator, t *testing.T) []module.Pipleline {
 	processors := []module.ProcessItem{processItem}
 	if number < -1 {
 		return []module.Pipleline{}
