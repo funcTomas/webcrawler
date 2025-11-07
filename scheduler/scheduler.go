@@ -290,7 +290,7 @@ func (sched *myScheduler) registerModules(moduleArgs ModuleArgs) error {
 			return genError(errMsg)
 		}
 	}
-	logger.Infof("All downloads have benn registered (number: %d)", len(moduleArgs.Downloaders))
+	logger.Infof("All downloads have been registered (number: %d)", len(moduleArgs.Downloaders))
 	for _, a := range moduleArgs.Analyzers {
 		if a == nil {
 			continue
@@ -304,7 +304,7 @@ func (sched *myScheduler) registerModules(moduleArgs ModuleArgs) error {
 			return genError(errMsg)
 		}
 	}
-	logger.Infof("All analyzers have benn registered (number: %d)", len(moduleArgs.Analyzers))
+	logger.Infof("All analyzers have been registered (number: %d)", len(moduleArgs.Analyzers))
 	for _, p := range moduleArgs.Pipelines {
 		if p == nil {
 			continue
@@ -318,7 +318,7 @@ func (sched *myScheduler) registerModules(moduleArgs ModuleArgs) error {
 			return genError(errMsg)
 		}
 	}
-	logger.Infof("All pipelines have benn registered (number: %d)", len(moduleArgs.Pipelines))
+	logger.Infof("All pipelines have been registered (number: %d)", len(moduleArgs.Pipelines))
 	return nil
 }
 
