@@ -10,7 +10,7 @@ import (
 
 var logger = log.DLogger()
 
-func New(mid module.MID, itemProcessors []module.ProcessItem, scoreCalculator module.CalculateScore) (module.Pipleline, error) {
+func New(mid module.MID, itemProcessors []module.ProcessItem, scoreCalculator module.CalculateScore) (module.Pipeline, error) {
 	moduleBase, err := stub.NewModuleInternal(mid, scoreCalculator)
 	if err != nil {
 		return nil, err

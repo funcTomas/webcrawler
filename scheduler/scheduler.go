@@ -575,7 +575,7 @@ func (sched *myScheduler) pickOne(item module.Item) {
 		sendItem(item, sched.itemBufferPool)
 		return
 	}
-	pipeline, ok := m.(module.Pipleline)
+	pipeline, ok := m.(module.Pipeline)
 	if !ok {
 		errMsg := fmt.Sprintf("incorrect pipeline type: %T (MID: %s)", m, m.ID())
 		sendError(errors.New(errMsg), m.ID(), sched.errorBufferPool)

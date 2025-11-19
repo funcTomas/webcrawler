@@ -43,14 +43,14 @@ type Analyzer interface {
 	Analyze(resp *Response) ([]Data, []error)
 }
 
-type ParseResponse func(httpResp *http.Response, respDepth uint32) ([]Data, []error)
-
-type Pipleline interface {
+type Pipeline interface {
 	Module
 	ItemProcessors() []ProcessItem
 	Send(item Item) []error
 	FailFast() bool
 	SetFailFast(failFast bool)
 }
+
+type ParseResponse func(httpResp *http.Response, respDepth uint32) ([]Data, []error)
 
 type ProcessItem func(item Item) (result Item, err error)

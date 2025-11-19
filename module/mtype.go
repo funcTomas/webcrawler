@@ -34,7 +34,7 @@ func CheckType(moduleType Type, module Module) bool {
 			return true
 		}
 	case TYPE_PIPELINE:
-		if _, ok := module.(Pipleline); ok {
+		if _, ok := module.(Pipeline); ok {
 			return true
 		}
 	}

@@ -280,19 +280,19 @@ func parseATag(httpResp *http.Response, respDepth uint32) ([]module.Data, []erro
 	return dataList, errs
 }
 
-func genSimplePipelines(number int8, reuseMID bool, snGen module.SNGenerator, t *testing.T) []module.Pipleline {
+func genSimplePipelines(number int8, reuseMID bool, snGen module.SNGenerator, t *testing.T) []module.Pipeline {
 	processors := []module.ProcessItem{processItem}
 	if number < -1 {
-		return []module.Pipleline{}
+		return []module.Pipeline{}
 	} else if number == -1 {
 		mid := module.MID(fmt.Sprintf("D%d", snGen.Get()))
 		p, err := pipeline.New(mid, processors, nil)
 		if err != nil {
 			t.Fatalf("An error occurs when creating a pipeline: %s (mid: %s, processors: %#v)", err, mid, processors)
 		}
-		return []module.Pipleline{p}
+		return []module.Pipeline{p}
 	}
-	results := make([]module.Pipleline, number)
+	results := make([]module.Pipeline, number)
 	var mid module.MID
 	for i := int8(0); i < number; i++ {
 		if i == 0 || !reuseMID {

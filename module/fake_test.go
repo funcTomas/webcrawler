@@ -134,7 +134,7 @@ type fakePipeline struct {
 	failFast bool
 }
 
-func NewFakePipeline(mid MID, scoreCalculator CalculateScore) Pipleline {
+func NewFakePipeline(mid MID, scoreCalculator CalculateScore) Pipeline {
 	return &fakePipeline{
 		fakeModule: fakeModule{
 			mid:             mid,

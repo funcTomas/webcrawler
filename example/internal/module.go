@@ -21,7 +21,7 @@ func GetDownloaders(number uint8) ([]module.Downloader, error) {
 		}
 		d, err := downloader.New(mid, genHTTPClient(), module.CalculateScoreSimple)
 		if err != nil {
-			return downloaders, nil
+			return downloaders, err
 		}
 		downloaders = append(downloaders, d)
 
@@ -48,11 +48,11 @@ func GetAnalyzers(number uint8) ([]module.Analyzer, error) {
 	return analyzers, nil
 }
 
-func GetPipelines(number uint8, dirPath string) ([]module.Pipleline, error) {
+func GetPipelines(number uint8, dirPath string) ([]module.Pipeline, error) {
 	if number == 0 {
 		return nil, nil
 	}
-	pipelines := []module.Pipleline{}
+	pipelines := []module.Pipeline{}
 	for range number {
 		mid, err := module.GenMID(module.TYPE_PIPELINE, snGen.Get(), nil)
 		if err != nil {

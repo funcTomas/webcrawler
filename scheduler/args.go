@@ -85,7 +85,7 @@ type ModuleArgsSummary struct {
 type ModuleArgs struct {
 	Downloaders []module.Downloader
 	Analyzers   []module.Analyzer
-	Pipelines   []module.Pipleline
+	Pipelines   []module.Pipeline
 }
 
 func (args *ModuleArgs) Check() error {

@@ -1,0 +1,445 @@
+@startuml
+namespace module {
+    interface "Analyzer"  {
+        + RespParsers() []ParseResponse
+        + Analyze(resp *Response) ([]Data, []error)
+
+    }
+    interface "Data"  {
+        + Valid() bool
+
+    }
+    interface "Downloader"  {
+        + Download(req *Request) (*Response, error)
+
+    }
+    class "Item" << (S,Aquamarine) >> {
+        + Valid() bool
+
+    }
+    interface "Module"  {
+        + ID() MID
+        + Addr() string
+        + Score() uint64
+        + SetScore(score uint64) 
+        + ScoreCalculator() CalculateScore
+        + CalledCount() uint64
+        + AcceptedCount() uint64
+        + CompletedCount() uint64
+        + HandlingNumber() uint64
+        + Counts() Counts
+        + Summary() SummaryStruct
+
+    }
+    interface "Pipeline"  {
+        + ItemProcessors() []ProcessItem
+        + Send(item Item) []error
+        + FailFast() bool
+        + SetFailFast(failFast bool) 
+
+    }
+    interface "Registrar"  {
+        + Register(module Module) (bool, error)
+        + Unregister(mid MID) (bool, error)
+        + Get(moduleType Type) (Module, error)
+        + GetAllByType(moduleType Type) (<font color=blue>map</font>[MID]{packageName}Module, error)
+        + GetAll() <font color=blue>map</font>[MID]{packageName}Module
+        + Clear() 
+
+    }
+    class "Counts" << (S,Aquamarine) >> {
+        + CalledCount uint64
+        + AcceptedCount uint64
+        + CompletedCount uint64
+        + HandlingNumber uint64
+
+    }
+    class "Request" << (S,Aquamarine) >> {
+        - httpReq *http.Request
+        - depth uint32
+
+        + HTTPReq() *http.Request
+        + Depth() uint32
+        + Valid() bool
+
+    }
+    class "Response" << (S,Aquamarine) >> {
+        - httpResp *http.Response
+        - depth uint32
+
+        + HTTPResp() *http.Response
+        + Depth() uint32
+        + Valid() bool
+
+    }
+    interface "SNGenerator"  {
+        + Start() uint64
+        + Max() uint64
+        + Next() uint64
+        + CycleCount() uint64
+        + Get() uint64
+
+    }
+    class "SummaryStruct" << (S,Aquamarine) >> {
+        + ID MID
+        + Called uint64
+        + Accepted uint64
+        + Completed uint64
+        + Handling uint64
+        + Extra <font color=blue>interface</font>{}
+
+    }
+    class "mAddr" << (S,Aquamarine) >> {
+        - network string
+        - address string
+
+        + Network() string
+        + String() string
+
+    }
+    class "module.CalculateScore" << (T, #FF7700) >>  {
+    }
+    class "module.Item" << (T, #FF7700) >>  {
+    }
+    class "module.MID" << (T, #FF7700) >>  {
+    }
+    class "module.ParseResponse" << (T, #FF7700) >>  {
+    }
+    class "module.ProcessItem" << (T, #FF7700) >>  {
+    }
+    class "module.Type" << (T, #FF7700) >>  {
+    }
+    class "myRegistrar" << (S,Aquamarine) >> {
+        - moduleTypeMap <font color=blue>map</font>[Type]<font color=blue>map</font>[MID]{packageName}Module
+        - rwlock sync.RWMutex
+
+        + Register(module Module) (bool, error)
+        + Unregister(mid MID) (bool, error)
+        + Get(moduleType Type) (Module, error)
+        + GetAllByType(moduleType Type) (<font color=blue>map</font>[MID]{packageName}Module, error)
+        + GetAll() <font color=blue>map</font>[MID]{packageName}Module
+        + Clear() 
+
+    }
+    class "mySnGenerator" << (S,Aquamarine) >> {
+        - start uint64
+        - max uint64
+        - next uint64
+        - cycleCount uint64
+        - lock sync.RWMutex
+
+        + Start() uint64
+        + Max() uint64
+        + Next() uint64
+        + CycleCount() uint64
+        + Get() uint64
+
+    }
+    class "<font color=blue>func</font>(*http.Response, uint32) ([]Data, []error)" as fontcolorbluefuncfonthttpResponseuint32Dataerror {
+        'This class was created so that we can correctly have an alias pointing to this name. Since it contains dots that can break namespaces
+    }
+}
+namespace scheduler {
+    interface "Args"  {
+        + Check() error
+
+    }
+    class "BufferPoolSummaryStruct" << (S,Aquamarine) >> {
+        + BufferCap uint32
+        + MaxBufferNumber uint32
+        + BufferNumber uint32
+        + Total uint64
+
+    }
+    class "DataArgs" << (S,Aquamarine) >> {
+        + ReqBufferCap uint32
+        + ReqMaxBufferNumber uint32
+        + RespBufferCap uint32
+        + RespMaxBufferNumber uint32
+        + ItemBufferCap uint32
+        + ItemMaxBufferNumber uint32
+        + ErrorBufferCap uint32
+        + ErrorMaxBufferNumber uint32
+
+        + Check() error
+
+    }
+    class "ModuleArgs" << (S,Aquamarine) >> {
+        + Downloaders []module.Downloader
+        + Analyzers []module.Analyzer
+        + Pipelines []module.Pipleline
+
+        + Check() error
+        + Summary() ModuleArgsSummary
+
+    }
+    class "ModuleArgsSummary" << (S,Aquamarine) >> {
+        + DownloaderListSize int
+        + AnalyzerListSize int
+        + PipelineListSize int
+
+    }
+    class "RequestArgs" << (S,Aquamarine) >> {
+        + AcceptedDomains []string
+        + MaxDepth uint32
+
+        + Check() error
+        + Same(another *RequestArgs) bool
+
+    }
+    interface "SchedSummary"  {
+        + Struct() SummaryStruct
+        + String() string
+
+    }
+    interface "Scheduler"  {
+        + Init(requestArgs RequestArgs, dataArgs DataArgs, moduleArgs ModuleArgs) error
+        + Start(firstHTTPReq *http.Request) error
+        + Stop() error
+        + Status() Status
+        + ErrorChan() <font color=blue>chan</font> error
+        + Idle() bool
+        + Summary() SchedSummary
+
+    }
+    class "SummaryStruct" << (S,Aquamarine) >> {
+        + RequestArgs RequestArgs
+        + DataArgs DataArgs
+        + ModuleArgs ModuleArgsSummary
+        + Status string
+        + Downloaders []module.SummaryStruct
+        + Analyzers []module.SummaryStruct
+        + Pipelines []module.SummaryStruct
+        + ReqBufferPool BufferPoolSummaryStruct
+        + RespBufferPool BufferPoolSummaryStruct
+        + ItemBufferPool BufferPoolSummaryStruct
+        + ErrorBufferPool BufferPoolSummaryStruct
+        + NumURL uint64
+
+        + Same(another SummaryStruct) bool
+
+    }
+    class "mySchedSummary" << (S,Aquamarine) >> {
+        - requestArgs RequestArgs
+        - dataArgs DataArgs
+        - moduleArgs ModuleArgs
+        - maxDepth uint32
+        - sched *myScheduler
+
+        + Struct() SummaryStruct
+        + String() string
+
+    }
+    class "myScheduler" << (S,Aquamarine) >> {
+        - maxDepth uint32
+        - acceptedDomainMap sync.Map
+        - registrar module.Registrar
+        - reqBufferPool buffer.Pool
+        - respBufferPool buffer.Pool
+        - itemBufferPool buffer.Pool
+        - errorBufferPool buffer.Pool
+        - urlMap sync.Map
+        - ctx context.Context
+        - cancelFunc context.CancelFunc
+        - status Status
+        - statusLock sync.RWMutex
+        - summary SchedSummary
+
+        - checkAndSetStatus(wantedStatus Status) (Status, error)
+        - initBufferPool(dataArgs DataArgs) 
+        - resetContext() 
+        - registerModules(moduleArgs ModuleArgs) error
+        - checkBufferPoolForStart() error
+        - download() 
+        - downloadOne(req *module.Request) 
+        - sendReq(req *module.Request) bool
+        - canceled() bool
+        - analyze() 
+        - analyzeOne(resp *module.Response) 
+        - pick() 
+        - pickOne(item module.Item) 
+
+        + Init(requestArgs RequestArgs, dataArgs DataArgs, moduleArgs ModuleArgs) error
+        + Start(firstHTTPReq *http.Request) error
+        + Stop() error
+        + Status() Status
+        + ErrorChan() <font color=blue>chan</font> error
+        + Idle() bool
+        + Summary() SchedSummary
+
+    }
+    class "scheduler.Status" << (T, #FF7700) >>  {
+    }
+}
+namespace module.local.analyzer {
+    class "myAnalyzer" << (S,Aquamarine) >> {
+        - respParsers []module.ParseResponse
+
+        + RespParsers() []module.ParseResponse
+        + Analyze(resp *module.Response) ([]module.Data, []error)
+
+    }
+}
+namespace module.local.downloader {
+    class "myDownloader" << (S,Aquamarine) >> {
+        - httpClient http.Client
+
+        + Download(req *module.Request) (*module.Response, error)
+
+    }
+}
+namespace module.local.pipeline {
+    class "extraSummaryStruct" << (S,Aquamarine) >> {
+        + FailFast bool
+        + ProcessorNumber int
+
+    }
+    class "myPipeline" << (S,Aquamarine) >> {
+        - itemProcessors []module.ProcessItem
+        - failFast bool
+
+        + ItemProcessors() []module.ProcessItem
+        + Send(item module.Item) []error
+        + FailFast() bool
+        + SetFailFast(failFast bool) 
+        + Summary() module.SummaryStruct
+
+    }
+}
+namespace module.stub {
+    interface "ModuleInternal"  {
+        + IncrCalledCount() 
+        + IncrAcceptedCount() 
+        + IncrCompletedCount() 
+        + IncrHandlingNumber() 
+        + DecrHandlingNumber() 
+        + Clear() 
+
+    }
+    class "myModule" << (S,Aquamarine) >> {
+        - mid module.MID
+        - addr string
+        - score uint64
+        - scoreCalculator module.CalculateScore
+        - calledCount uint64
+        - acceptedCount uint64
+        - completedCount uint64
+        - handlingNumber uint64
+
+        + ID() module.MID
+        + Addr() string
+        + Score() uint64
+        + SetScore(score uint64) 
+        + ScoreCalculator() module.CalculateScore
+        + AcceptedCount() uint64
+        + CalledCount() uint64
+        + Clear() 
+        + CompletedCount() uint64
+        + Counts() module.Counts
+        + DecrHandlingNumber() 
+        + HandlingNumber() uint64
+        + IncrAcceptedCount() 
+        + IncrCompletedCount() 
+        + IncrHandlingNumber() 
+        + IncrCalledCount() 
+        + Summary() module.SummaryStruct
+
+    }
+}
+namespace module.toolkit.reader {
+    interface "MultipleReader"  {
+        + Reader() io.ReadCloser
+
+    }
+    class "myMultipleReader" << (S,Aquamarine) >> {
+        - data []byte
+
+        + Reader() io.ReadCloser
+
+    }
+}
+namespace buffer {
+    interface "Buffer"  {
+        + Cap() uint32
+        + Len() uint32
+        + Put(datum <font color=blue>interface</font>{}) (bool, error)
+        + Get() (<font color=blue>interface</font>{}, error)
+        + Close() bool
+        + Closed() bool
+
+    }
+    interface "Pool"  {
+        + BufferCap() uint32
+        + MaxBufferNumber() uint32
+        + BufferNumber() uint32
+        + Total() uint64
+        + Put(datum <font color=blue>interface</font>{}) error
+        + Get() (<font color=blue>interface</font>{}, error)
+        + Close() bool
+        + Closed() bool
+
+    }
+    class "myBuffer" << (S,Aquamarine) >> {
+        - ch <font color=blue>chan</font> <font color=blue>interface</font>{}
+        - closed uint32
+        - closingLock sync.RWMutex
+
+        + Cap() uint32
+        + Len() uint32
+        + Closed() bool
+        + Close() bool
+        + Put(datum <font color=blue>interface</font>{}) (bool, error)
+        + Get() (<font color=blue>interface</font>{}, error)
+
+    }
+    class "myPool" << (S,Aquamarine) >> {
+        - bufferCap uint32
+        - maxBufferNumber uint32
+        - bufferNumber uint32
+        - total uint64
+        - bufCh <font color=blue>chan</font> Buffer
+        - closed uint32
+        - rwlock sync.RWMutex
+
+        - putData(buf Buffer, datum <font color=blue>interface</font>{}, count *uint32, maxCount uint32) (bool, error)
+        - getData(buf Buffer, count *uint32, maxCount uint32) (<font color=blue>interface</font>{}, error)
+
+        + BufferCap() uint32
+        + MaxBufferNumber() uint32
+        + BufferNumber() uint32
+        + Total() uint64
+        + Put(datum <font color=blue>interface</font>{}) error
+        + Get() (<font color=blue>interface</font>{}, error)
+        + Close() bool
+        + Closed() bool
+
+    }
+}
+"__builtin__.string" #.. "module.MID"
+"__builtin__.string" #.. "module.Type"
+"__builtin__.uint8" #.. "scheduler.Status"
+"module.Module" <|-- "module.Analyzer"
+"module.Module" <|-- "module.Downloader"
+"module.Module" <|-- "module.Pipeline"
+"module.Module" <|-- "module.stub.ModuleInternal"
+"module.stub.ModuleInternal" <|-- "module.local.analyzer.myAnalyzer"
+"module.stub.ModuleInternal" <|-- "module.local.downloader.myDownloader"
+"module.stub.ModuleInternal" <|-- "module.local.pipeline.myPipeline"
+
+"module.Analyzer" <|.. "module.local.analyzer.myAnalyzer"
+"module.Downloader" <|.. "module.local.downloader.myDownloader"
+"module.Pipeline" <|.. "module.local.pipeline.myPipeline"
+
+"module.Data" <|-- "module.Item"
+"module.Data" <|-- "module.Request"
+"module.Data" <|-- "module.Response"
+"module.Registrar" <|-- "module.myRegistrar"
+"module.SNGenerator" <|-- "module.mySnGenerator"
+"scheduler.Args" <|-- "scheduler.DataArgs"
+"scheduler.Args" <|-- "scheduler.ModuleArgs"
+"scheduler.Args" <|-- "scheduler.RequestArgs"
+"scheduler.SchedSummary" <|-- "scheduler.mySchedSummary"
+"scheduler.Scheduler" <|-- "scheduler.myScheduler"
+
+
+@enduml
