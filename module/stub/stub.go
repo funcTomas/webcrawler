@@ -4,11 +4,8 @@ import (
 	"fmt"
 	"sync/atomic"
 	"webcrawler/errors"
-	"webcrawler/helper/log"
 	"webcrawler/module"
 )
-
-var logger = log.DLogger()
 
 type myModule struct {
 	mid             module.MID

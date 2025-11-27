@@ -12,7 +12,7 @@ import (
 func genItemProcessors(dirPath string) []module.ProcessItem {
 	savePic := func(item module.Item) (result module.Item, err error) {
 		if item == nil {
-			return nil, errors.New("invalid item!")
+			return nil, errors.New("invalid item")
 		}
 		var absDirPath string
 		if absDirPath, err = checkDirPath(dirPath); err != nil {
