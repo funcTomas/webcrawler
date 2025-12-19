@@ -39,7 +39,7 @@ func GetAnalyzers(number uint8) ([]module.Analyzer, error) {
 		if err != nil {
 			return analyzers, nil
 		}
-		a, err := analyzer.New(mid, genResponseParsers(), module.CalculateScoreSimple)
+		a, err := analyzer.New(mid, genResponseParsersV2(), module.CalculateScoreSimple)
 		if err != nil {
 			return analyzers, err
 		}
@@ -58,7 +58,7 @@ func GetPipelines(number uint8, dirPath string) ([]module.Pipeline, error) {
 		if err != nil {
 			return pipelines, err
 		}
-		a, err := pipeline.New(mid, genItemProcessors(dirPath), module.CalculateScoreSimple)
+		a, err := pipeline.New(mid, genItemProcessorsV2(dirPath), module.CalculateScoreSimple)
 		if err != nil {
 			return pipelines, err
 		}

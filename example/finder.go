@@ -23,13 +23,13 @@ var (
 var logger = log.DLogger()
 
 func init() {
-	flag.StringVar(&firstURL, "first", "http://baidu.com",
+	flag.StringVar(&firstURL, "first", "http://news.people.com.cn/210801/211150/index.js?cache=false",
 		"The first URL which you want to access.")
-	flag.StringVar(&domains, "domains", "baidu.com",
+	flag.StringVar(&domains, "domains", "people.com.cn,people.cn",
 		"The primary domains which you accepted. "+
 			"please using comma-separated multiple domains.")
 	flag.UintVar(&depth, "depth", 3, "The depth for crawling.")
-	flag.StringVar(&dirPath, "dir", "./pictures",
+	flag.StringVar(&dirPath, "dir", "./text_out",
 		"The path which you want to save the image files")
 }
 
